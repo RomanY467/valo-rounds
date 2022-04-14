@@ -10,6 +10,7 @@ class Rounds extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.black54,
         title: const Text(
           "ValoRounds",

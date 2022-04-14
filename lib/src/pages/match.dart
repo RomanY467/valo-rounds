@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:valo/src/pages/result.dart';
+import 'package:valo/src/pages/site.dart';
 
 class Match extends StatefulWidget {
   final String mapa, side;
@@ -16,10 +18,14 @@ class _MatchState extends State<Match> {
   String v_d = "";
   List<String> listaR = [];
   bool finalizado = false;
+  bool pos_remake = false;
+  bool pos_empate = false;
+  bool empatados = false;
 
   // ignore: non_constant_identifier_names
   void suma_resta(bool valor) {
     setState(() {
+      //Agrega datos de la ronda a la listaR
       if (valor == true) {
         wins++;
         listaR.add("W");
@@ -49,7 +55,29 @@ class _MatchState extends State<Match> {
           }
         }
       }
+
+      if (v_d == "Victoria!") {
+        listaR.add("Victory");
+      } else if (v_d == "Derrota") {
+        listaR.add("Defeat");
+      }
+      // Verifica si es posible hacer remake
+      if (wins + losses == 1) {
+        pos_remake = true;
+      } else {
+        pos_remake = false;
+      }
+      // Verifica si es posible un empate
+      if (wins > 12 && losses > 12) {
+        pos_empate = true;
+      }
     });
+    if (finalizado == true) {
+      final route = MaterialPageRoute(
+          builder: (context) =>
+              Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
+      Navigator.push(context, route);
+    }
   }
 
   @override
@@ -57,6 +85,7 @@ class _MatchState extends State<Match> {
     return Scaffold(
         backgroundColor: Colors.grey,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.black54,
           title: const Text(
             "ValoRounds",
@@ -67,16 +96,7 @@ class _MatchState extends State<Match> {
   }
 
   Widget _cuerpo(wins, losses, finalizado) {
-    if (finalizado == false) {
-      return _MatchScreen();
-    } else {
-      return Center(
-        child: Text(
-          v_d,
-          style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-        ),
-      );
-    }
+    return _MatchScreen();
   }
 
   // ignore: non_constant_identifier_names
@@ -101,7 +121,8 @@ class _MatchState extends State<Match> {
           children: <Widget>[
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.green[800]),
-                onPressed: () {
+                onPressed: () async {
+                  await Brisa(context, widget.mapa, listaR);
                   suma_resta(true);
                 },
                 child: const SizedBox(
@@ -110,7 +131,8 @@ class _MatchState extends State<Match> {
                     child: Center(child: Text("Victoria")))),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.red[800]),
-                onPressed: () {
+                onPressed: () async {
+                  await Brisa(context, widget.mapa, listaR);
                   suma_resta(false);
                 },
                 child: const SizedBox(
@@ -124,14 +146,20 @@ class _MatchState extends State<Match> {
           children: <Widget>[
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.green[800]),
-                onPressed: () {},
+                onPressed: () {
+                  listaR.add("R");
+                },
                 child: const SizedBox(
                     width: 80,
                     height: 40,
                     child: Center(child: Text("Remake")))),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.red[800]),
-                onPressed: () {},
+                onPressed: () {
+                  listaR.add("FF");
+                  finalizado = true;
+                  v_d = "FF";
+                },
                 child: const SizedBox(
                     width: 80, height: 40, child: Center(child: Text("/FF")))),
           ],
@@ -139,11 +167,24 @@ class _MatchState extends State<Match> {
         Center(
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.red[800]),
-              onPressed: () {},
+              onPressed: () {
+                if (pos_empate == true) {
+                  listaR.add("D");
+                  finalizado = true;
+                  v_d = "Empate";
+                }
+              },
               child: const SizedBox(
                   width: 80, height: 40, child: Center(child: Text("Empate")))),
         ),
       ],
     );
+  }
+
+  void resultscreen() {
+    final route = MaterialPageRoute(
+        builder: (context) =>
+            Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
+    Navigator.push(context, route);
   }
 }
