@@ -1,11 +1,16 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:valo/src/pages/result.dart';
 import 'package:valo/src/pages/site.dart';
 
 class Match extends StatefulWidget {
   final String mapa, side;
-  const Match({Key? key, required this.mapa, required this.side})
-      : super(key: key);
+  const Match({
+    Key? key,
+    required this.mapa,
+    required this.side,
+  }) : super(key: key);
 
   @override
   State<Match> createState() => _MatchState();
@@ -14,7 +19,6 @@ class Match extends StatefulWidget {
 class _MatchState extends State<Match> {
   int wins = 0;
   int losses = 0;
-  // ignore: non_constant_identifier_names
   String v_d = "";
   List<String> listaR = [];
   bool finalizado = false;
@@ -22,9 +26,19 @@ class _MatchState extends State<Match> {
   bool pos_empate = false;
   bool empatados = false;
 
-  // ignore: non_constant_identifier_names
+  bool ultima_ronda = false;
+
+  //Comprueba si es el inicio del Match y agrega Mapa y MapSide a listaR
+  void _addMapSide() {
+    if (wins + losses == 0) {
+      listaR.add(widget.mapa);
+      listaR.add(widget.side);
+    }
+  }
+
   void suma_resta(bool valor) {
     setState(() {
+      _addMapSide();
       //Agrega datos de la ronda a la listaR
       if (valor == true) {
         wins++;
@@ -55,12 +69,6 @@ class _MatchState extends State<Match> {
           }
         }
       }
-
-      if (v_d == "Victoria!") {
-        listaR.add("Victory");
-      } else if (v_d == "Derrota") {
-        listaR.add("Defeat");
-      }
       // Verifica si es posible hacer remake
       if (wins + losses == 1) {
         pos_remake = true;
@@ -72,12 +80,6 @@ class _MatchState extends State<Match> {
         pos_empate = true;
       }
     });
-    if (finalizado == true) {
-      final route = MaterialPageRoute(
-          builder: (context) =>
-              Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
-      Navigator.push(context, route);
-    }
   }
 
   @override
@@ -99,7 +101,21 @@ class _MatchState extends State<Match> {
     return _MatchScreen();
   }
 
-  // ignore: non_constant_identifier_names
+//Si el match ya tiene ganador le da el valor de victoria/derrota a v_d y navega a pagina de Resultados
+  void _finalizado() {
+    if (v_d == "Victoria!") {
+      listaR.add("Victory");
+    } else if (v_d == "Derrota!") {
+      listaR.add("Defeat");
+    }
+    if (finalizado == true) {
+      final route = MaterialPageRoute(
+          builder: (context) =>
+              Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
+      Navigator.push(context, route);
+    }
+  }
+
   Widget _MatchScreen() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,34 +126,32 @@ class _MatchState extends State<Match> {
             style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
           ),
         ),
-        Center(
-          child: Text(
-            v_d,
-            style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-          ),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.green[800]),
                 onPressed: () async {
-                  await Brisa(context, widget.mapa, listaR);
                   suma_resta(true);
+                  await brisa(context, widget.mapa, listaR);
+                  _finalizado();
+
+                  print(listaR);
                 },
                 child: const SizedBox(
-                    width: 80,
-                    height: 40,
+                    width: 100,
+                    height: 60,
                     child: Center(child: Text("Victoria")))),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.red[800]),
                 onPressed: () async {
-                  await Brisa(context, widget.mapa, listaR);
                   suma_resta(false);
+                  await brisa(context, widget.mapa, listaR);
+                  _finalizado();
                 },
                 child: const SizedBox(
-                    width: 80,
-                    height: 40,
+                    width: 100,
+                    height: 60,
                     child: Center(child: Text("Derrota")))),
           ],
         ),
@@ -145,37 +159,47 @@ class _MatchState extends State<Match> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.green[800]),
+                style: ElevatedButton.styleFrom(primary: Colors.black54),
                 onPressed: () {
-                  listaR.add("R");
+                  if (pos_remake == true) {
+                    listaR.add("Remake");
+                    finalizado = true;
+                    _finalizado();
+                  }
                 },
                 child: const SizedBox(
                     width: 80,
                     height: 40,
                     child: Center(child: Text("Remake")))),
             ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.red[800]),
+                style: ElevatedButton.styleFrom(primary: Colors.black87),
                 onPressed: () {
-                  listaR.add("FF");
-                  finalizado = true;
-                  v_d = "FF";
+                  if (wins + losses >= 4) {
+                    listaR.add("FF");
+                    v_d = "FF";
+                    finalizado = true;
+                    _finalizado();
+                  }
                 },
                 child: const SizedBox(
                     width: 80, height: 40, child: Center(child: Text("/FF")))),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black87),
+                onPressed: () {
+                  if (pos_empate == true) {
+                    if (wins == losses) {
+                      listaR.add("Draw");
+                      finalizado = true;
+                      v_d = "Empate";
+                      _finalizado();
+                    }
+                  }
+                },
+                child: const SizedBox(
+                    width: 80,
+                    height: 40,
+                    child: Center(child: Text("Empate"))))
           ],
-        ),
-        Center(
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.red[800]),
-              onPressed: () {
-                if (pos_empate == true) {
-                  listaR.add("D");
-                  finalizado = true;
-                  v_d = "Empate";
-                }
-              },
-              child: const SizedBox(
-                  width: 80, height: 40, child: Center(child: Text("Empate")))),
         ),
       ],
     );

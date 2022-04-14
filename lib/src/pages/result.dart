@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:valo/src/gs/valo_sheets.dart';
 
 class Resultado extends StatefulWidget {
   final String mapa;
@@ -30,7 +31,7 @@ class _ResultadoState extends State<Resultado> {
   }
 
   Widget _cuerpo(mapa, side, lista) {
-    print(lista);
+    SheetsApi.insert(lista);
     int len = widget.listaR.length;
     return Column(
       children: <Widget>[

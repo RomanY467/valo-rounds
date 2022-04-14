@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> Brisa(context, mapa, List<String> lista) async {
+Future<void> brisa(context, mapa, List<String> lista) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
@@ -18,8 +18,8 @@ Future<void> Brisa(context, mapa, List<String> lista) async {
           TextButton(
             child: const Text('Default'),
             onPressed: () {
-              lista.add("Default");
               Navigator.of(context).pop();
+              lista.add("Default");
             },
           ),
           TextButton(
