@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:valo/src/pages/home.dart';
-import "package:valo/src/pages/rounds.dart";
 
 void main() => runApp(MyApp());
 

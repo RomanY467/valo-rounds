@@ -64,7 +64,10 @@ class HomePage extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 30),
         onTap: () {
-          final route = MaterialPageRoute(builder: (context) => Rounds());
+          final route = MaterialPageRoute(
+              builder: (context) => Rounds(
+                    mapa: item,
+                  ));
           Navigator.push(context, route);
         });
   }

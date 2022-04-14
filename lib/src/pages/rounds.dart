@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:valo/src/pages/match.dart';
 
-class Rounds extends StatefulWidget {
-  const Rounds({Key? key}) : super(key: key);
+class Rounds extends StatelessWidget {
+  final String mapa;
+  const Rounds({Key? key, required this.mapa}) : super(key: key);
 
-  @override
-  State<Rounds> createState() => _RoundsState();
-}
-
-class _RoundsState extends State<Rounds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,15 +16,21 @@ class _RoundsState extends State<Rounds> {
           style: TextStyle(color: Colors.white60),
         ),
       ),
-      body: _column(),
+      body: _column(context, mapa),
     );
   }
 }
 
-Widget _column() {
+Widget _column(context, String mapa) {
+  String selectedmap = mapa;
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     children: <Widget>[
+      const SizedBox(height: 30),
+      Text(
+        selectedmap,
+        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      ),
       const SizedBox(
         height: 120,
       ),
@@ -38,14 +41,26 @@ Widget _column() {
         children: <Widget>[
           ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
-              onPressed: () {},
+              onPressed: () {
+                String side = "Ataque";
+                final route = MaterialPageRoute(
+                    builder: (context) => Match(mapa: mapa, side: side));
+                Navigator.push(context, route);
+              },
               child: const SizedBox(
                   width: 80, height: 40, child: Center(child: Text("Ataque")))),
           ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
-              onPressed: () {},
+              onPressed: () {
+                String side = "Defensa";
+                final route = MaterialPageRoute(
+                    builder: (context) => Match(mapa: mapa, side: side));
+                Navigator.push(context, route);
+              },
               child: const SizedBox(
-                  width: 80, height: 40, child: Center(child: Text("Ataque")))),
+                  width: 80,
+                  height: 40,
+                  child: Center(child: Text("Defensa")))),
         ],
       )
     ],
