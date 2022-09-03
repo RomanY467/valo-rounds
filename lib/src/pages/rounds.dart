@@ -3,7 +3,14 @@ import 'package:valo/src/pages/match.dart';
 
 class Rounds extends StatelessWidget {
   final String mapa;
-  const Rounds({Key? key, required this.mapa}) : super(key: key);
+  final String enemiesS;
+  final String alliesS;
+  const Rounds(
+      {Key? key,
+      required this.mapa,
+      required this.enemiesS,
+      required this.alliesS})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +24,12 @@ class Rounds extends StatelessWidget {
           style: TextStyle(color: Colors.white60),
         ),
       ),
-      body: _column(context, mapa),
+      body: _column(context, mapa, alliesS, enemiesS),
     );
   }
 }
 
-Widget _column(context, String mapa) {
+Widget _column(context, String mapa, String alliesS, String enemiesS) {
   String selectedmap = mapa;
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +52,12 @@ Widget _column(context, String mapa) {
               onPressed: () {
                 String side = "Ataque";
                 final route = MaterialPageRoute(
-                    builder: (context) => Match(mapa: mapa, side: side));
+                    builder: (context) => Match(
+                          mapa: mapa,
+                          side: side,
+                          enemiesS: enemiesS,
+                          alliesS: alliesS,
+                        ));
                 Navigator.push(context, route);
               },
               child: const SizedBox(
@@ -55,7 +67,11 @@ Widget _column(context, String mapa) {
               onPressed: () {
                 String side = "Defensa";
                 final route = MaterialPageRoute(
-                    builder: (context) => Match(mapa: mapa, side: side));
+                    builder: (context) => Match(
+                        mapa: mapa,
+                        side: side,
+                        enemiesS: enemiesS,
+                        alliesS: alliesS));
                 Navigator.push(context, route);
               },
               child: const SizedBox(

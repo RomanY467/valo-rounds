@@ -1,5 +1,30 @@
 import 'package:flutter/material.dart';
 
+Future<void> ff(context, List<String> lista) async {
+  return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Victoria o Derrota?"),
+          actions: <Widget>[
+            TextButton(
+                child: Text('Victoria'),
+                onPressed: () {
+                  lista.add("Victory");
+                  Navigator.of(context).pop();
+                }),
+            TextButton(
+                child: Text('Derrota'),
+                onPressed: () {
+                  lista.add("Defeat");
+                  Navigator.of(context).pop();
+                }),
+          ],
+        );
+      });
+}
+
 Future<void> brisa(context, mapa, List<String> lista) async {
   return showDialog<void>(
     context: context,
@@ -26,13 +51,6 @@ Future<void> brisa(context, mapa, List<String> lista) async {
             child: const Text('Picks'),
             onPressed: () {
               lista.add("Picks");
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Hold'),
-            onPressed: () {
-              lista.add("Hold");
               Navigator.of(context).pop();
             },
           ),

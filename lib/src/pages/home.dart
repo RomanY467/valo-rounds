@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:valo/src/pages/agent_select.dart';
 import 'package:valo/src/pages/rounds.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,7 +14,7 @@ class HomePage extends StatelessWidget {
     "Fracture",
     "Haven",
     "Icebox",
-    "Split"
+    "Pearl"
   ];
 
   @override
@@ -64,11 +65,17 @@ class HomePage extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 30),
         onTap: () {
-          final route = MaterialPageRoute(
-              builder: (context) => Rounds(
-                    mapa: item,
-                  ));
+          final route =
+              MaterialPageRoute(builder: (context) => agents(mapa: item));
           Navigator.push(context, route);
         });
+
+    // onTap: () {
+    //       final route = MaterialPageRoute(
+    //           builder: (context) => Rounds(
+    //                 mapa: item,
+    //               ));
+    //       Navigator.push(context, route);
+    //     });
   }
 }

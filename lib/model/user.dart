@@ -1,7 +1,7 @@
 class UserFields {
-  static final String mapa = "Mapa";
-  static final String side = "Side";
-  static final String rondas = "Rondas";
+  static const String mapa = "Mapa";
+  static const String side = "Side";
+  static const rondas = "Rondas";
 
   static List<String> getFields() => [mapa, side, rondas];
 }

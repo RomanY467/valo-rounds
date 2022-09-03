@@ -5,11 +5,13 @@ import 'package:valo/src/pages/result.dart';
 import 'package:valo/src/pages/site.dart';
 
 class Match extends StatefulWidget {
-  final String mapa, side;
+  final String mapa, side, alliesS, enemiesS;
   const Match({
     Key? key,
     required this.mapa,
     required this.side,
+    required this.alliesS,
+    required this.enemiesS,
   }) : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class _MatchState extends State<Match> {
   int losses = 0;
   String v_d = "";
   List<String> listaR = [];
+  List<String> listaR2 = [];
   bool finalizado = false;
   bool pos_remake = false;
   bool pos_empate = false;
@@ -33,6 +36,8 @@ class _MatchState extends State<Match> {
     if (wins + losses == 0) {
       listaR.add(widget.mapa);
       listaR.add(widget.side);
+      listaR.add(widget.alliesS);
+      listaR.add(widget.enemiesS);
     }
   }
 
@@ -109,9 +114,26 @@ class _MatchState extends State<Match> {
       listaR.add("Defeat");
     }
     if (finalizado == true) {
+      //Coloca los datos de la ronda en la listaR2 (Solo de Side y Mapa)
+      listaR2.add(listaR[0]);
+      listaR2.add(listaR[1]);
+      listaR2.add(listaR[2]);
+      listaR2.add(listaR[3]);
+      //Coloca los datos de las rondas en un solo elemento de la listaR2
+      String elemento = "";
+      for (int i = 4; i < listaR.length - 2; i++) {
+        elemento = elemento + listaR[i] + "/";
+      }
+      elemento = elemento + listaR[listaR.length - 1];
+      listaR2.add(elemento);
+      listaR2.add(listaR[listaR.length - 1]);
+
       final route = MaterialPageRoute(
-          builder: (context) =>
-              Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
+          builder: (context) => Resultado(
+              mapa: widget.mapa,
+              side: widget.side,
+              listaR: listaR,
+              listaR2: listaR2));
       Navigator.push(context, route);
     }
   }
@@ -173,11 +195,13 @@ class _MatchState extends State<Match> {
                     child: Center(child: Text("Remake")))),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.black87),
-                onPressed: () {
+                onPressed: () async {
                   if (wins + losses >= 4) {
                     listaR.add("FF");
+                    await ff(context, listaR);
                     v_d = "FF";
                     finalizado = true;
+
                     _finalizado();
                   }
                 },
@@ -207,8 +231,11 @@ class _MatchState extends State<Match> {
 
   void resultscreen() {
     final route = MaterialPageRoute(
-        builder: (context) =>
-            Resultado(mapa: widget.mapa, side: widget.side, listaR: listaR));
+        builder: (context) => Resultado(
+            mapa: widget.mapa,
+            side: widget.side,
+            listaR: listaR,
+            listaR2: listaR2));
     Navigator.push(context, route);
   }
 }
